@@ -69,17 +69,17 @@ bool isSame(const std::vector<std::string> & lhs, const std::vector<std::string>
   return rtn;
 }
 
-bool findChainJointNames(const boost::shared_ptr<const urdf::Link> &link, bool ignore_fixed,
+bool findChainJointNames(const std::shared_ptr<const urdf::Link> &link, bool ignore_fixed,
 		                 std::vector<std::string> &joint_names)
 {
-  typedef std::vector<boost::shared_ptr<urdf::Joint> > joint_list;
-  typedef std::vector<boost::shared_ptr<urdf::Link> > link_list;
+  typedef std::vector<std::shared_ptr<urdf::Joint> > joint_list;
+  typedef std::vector<std::shared_ptr<urdf::Link> > link_list;
   std::string found_joint, found_link;
 
   // check for joints directly connected to this link
-  const joint_list &joints = link->child_joints;
+  const auto &joints = link->child_joints;
   ROS_DEBUG("Found %lu child joints:", joints.size());
-  for (joint_list::const_iterator it=joints.begin(); it!=joints.end(); ++it)
+  for (auto it=joints.begin(); it!=joints.end(); ++it)
   {
     ROS_DEBUG_STREAM("  " << (*it)->name << ": type " <<  (*it)->type);
     if (ignore_fixed && (*it)->type == urdf::Joint::FIXED)
@@ -98,10 +98,10 @@ bool findChainJointNames(const boost::shared_ptr<const urdf::Link> &link, bool i
   }
 
   // check for joints connected to children of this link
-  const link_list &links = link->child_links;
+  const auto &links = link->child_links;
   std::vector<std::string> sub_joints;
   ROS_DEBUG("Found %lu child links:", links.size());
-  for (link_list::const_iterator it=links.begin(); it!=links.end(); ++it)
+  for (auto it=links.begin(); it!=links.end(); ++it)
   {
     ROS_DEBUG_STREAM("  " << (*it)->name);
     if (!findChainJointNames(*it, ignore_fixed, sub_joints))   // NOTE: recursive call

@@ -51,7 +51,7 @@ bool JointTrajectoryStreamer::init(SmplMsgConnection* connection, const std::vec
   this->current_point_ = 0;
   this->state_ = TransferStates::IDLE;
   this->streaming_thread_ =
-      new boost::thread(boost::bind(&JointTrajectoryStreamer::streamingThread, this));
+      new std::thread(std::bind(&JointTrajectoryStreamer::streamingThread, this));
   ROS_INFO("Unlocking mutex");
   this->mutex_.unlock();
 

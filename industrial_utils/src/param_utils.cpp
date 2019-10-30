@@ -135,16 +135,15 @@ bool getJointNames(const std::string joint_list_param, const std::string urdf_pa
 bool getJointVelocityLimits(const std::string urdf_param_name, std::map<std::string, double> &velocity_limits)
 {
   urdf::Model model;
-  std::map<std::string, boost::shared_ptr<urdf::Joint> >::iterator iter;
 
   if (!ros::param::has(urdf_param_name) || !model.initParam(urdf_param_name))
     return false;
     
   velocity_limits.clear();
-  for (iter=model.joints_.begin(); iter!=model.joints_.end(); ++iter)
+  for (auto iter=model.joints_.begin(); iter!=model.joints_.end(); ++iter)
   {
     std::string joint_name(iter->first);
-    boost::shared_ptr<urdf::JointLimits> limits = iter->second->limits;
+    std::shared_ptr<urdf::JointLimits> limits = iter->second->limits;
     if ( limits && (limits->velocity > 0) )
       velocity_limits.insert(std::pair<std::string,double>(joint_name,limits->velocity));
   }
